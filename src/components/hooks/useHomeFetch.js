@@ -15,7 +15,7 @@ const initialState = {
 export const useHomeFetch = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
-    const [state, setState] = useState( initialState);
+    const [state, setState] = useState( isPersistedState('homeState') ? isPersistedState('homeState') : initialState);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -24,7 +24,6 @@ export const useHomeFetch = () => {
       try {
         setError(false);
         setLoading(true);
-
         const movies = await API.fetchMovies(searchTerm, page);
         setState(prev => ({
           ...movies,
@@ -45,6 +44,7 @@ export const useHomeFetch = () => {
         const sessionState = isPersistedState('homeState');
         if (sessionState) {
           setState(sessionState);
+          return;
         }
       }
 

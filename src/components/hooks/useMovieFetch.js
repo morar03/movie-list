@@ -4,7 +4,7 @@ import API from "../../API";
 import { isPersistedState } from "../../helpers";
 
 export const useMovieFetch = (movieId) => {
-    const [state, setState] = useState({});
+    const [state, setState] = useState(isPersistedState(movieId));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -13,7 +13,6 @@ export const useMovieFetch = (movieId) => {
         try {
             setLoading(true);
             setError(false);
-
             const movie = await API.fetchMovie(movieId);
             const credits = await API.fetchCredits(movieId);
             // Get directors only
@@ -39,6 +38,7 @@ export const useMovieFetch = (movieId) => {
         if (sessionState) {
             setState(sessionState);
             setLoading(false);
+            return;
         }
         
         fetchMovie();
